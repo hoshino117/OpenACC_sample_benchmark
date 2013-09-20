@@ -704,7 +704,7 @@ contains
     real(8), dimension(max,max), intent(in) :: A
     real(8), dimension(max,max), intent(in) :: B
     real(8), dimension(max,max), intent(inout) :: C
-    integer :: i, j, kb, tx, ty
+    integer :: i, j, kb, tx, ty, k
     real(8), shared :: Asub(17,16), Bsub(17,64)
     real(8) :: Cij1, Cij2, Cij3, Cij4
 
@@ -724,6 +724,14 @@ contains
        Bsub(tx,ty+32) = B(kb+tx,j+32)
        Bsub(tx,ty+48) = B(kb+tx,j+48)
        call syncthreads()
+#if 1
+       do k = 1, 16
+          Cij1 = Cij1 + Asub(tx,k) * Bsub(k,ty   )
+          Cij2 = Cij2 + Asub(tx,k) * Bsub(k,ty+16)
+          Cij3 = Cij3 + Asub(tx,k) * Bsub(k,ty+32)
+          Cij4 = Cij4 + Asub(tx,k) * Bsub(k,ty+48)
+       end do
+#else          
        Cij1 = Cij1 + Asub(tx,1) * Bsub(1,ty   )
        Cij2 = Cij2 + Asub(tx,1) * Bsub(1,ty+16)
        Cij3 = Cij3 + Asub(tx,1) * Bsub(1,ty+32)
@@ -788,6 +796,7 @@ contains
        Cij2 = Cij2 + Asub(tx,16) * Bsub(16,ty+16)
        Cij3 = Cij3 + Asub(tx,16) * Bsub(16,ty+32)
        Cij4 = Cij4 + Asub(tx,16) * Bsub(16,ty+48)
+#endif
        call syncthreads()
     enddo
     C(i,j   ) = Cij1
