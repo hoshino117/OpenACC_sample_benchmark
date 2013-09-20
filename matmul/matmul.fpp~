@@ -730,8 +730,13 @@ contains
           Cij2 = Cij2 + Asub(tx,k) * Bsub(k,ty+16)
           Cij3 = Cij3 + Asub(tx,k) * Bsub(k,ty+32)
           Cij4 = Cij4 + Asub(tx,k) * Bsub(k,ty+48)
+<<<<<<< HEAD
        end do
+#else          
+=======
+       end do 
 #else
+>>>>>>> d618480dbb9b9a382eef391e45b1d39dcf28debc
        Cij1 = Cij1 + Asub(tx,1) * Bsub(1,ty   )
        Cij2 = Cij2 + Asub(tx,1) * Bsub(1,ty+16)
        Cij3 = Cij3 + Asub(tx,1) * Bsub(1,ty+32)
