@@ -232,7 +232,11 @@ contains
     gflops = (nx*ny*nz)*13.0*count/elapsed_time / (1024.0**3)
     thput  = (nx*ny*nz)*4*2.0*count/elapsed_time / (1024.0**3)
 
+#ifdef CAPS
+    print "(A, I4, A, F10.5, A, F10.5, A, F10.5, A, E12.5, A, I3, A, I3)", "opt thread block,", DATASIZE, ",", elapsed_time, ",", gflops, ",", thput, ",", err, ",", 32, "," ,THREAD_Y
+#else
     print "(A, I4, A, F10.5, A, F10.5, A, F10.5, A, E12.5, A, I3, A, I3)", "opt thread block,", DATASIZE, ",", elapsed_time, ",", gflops, ",", thput, ",", err, ",", THREAD_X, "," ,THREAD_Y
+#endif
 
 #endif !THREAD
 
@@ -611,7 +615,7 @@ contains
 #ifdef PGI
 !$acc loop seq
 #elif CAPS
-!$acc loop 
+!$acc loop gang(nz)
 #elif CRAY
 !$acc loop independent gang
 #endif
@@ -619,7 +623,7 @@ contains
 #ifdef PGI
 !$acc loop independent gang vector(THREAD_Y)
 #elif CAPS
-!$acc loop gang(ny)
+!$acc loop worker(THREAD_Y)
 #elif CRAY
 !$acc loop independent
 #endif
@@ -627,7 +631,7 @@ contains
 #ifdef PGI
 !$acc loop independent gang vector(THREAD_X)
 #elif CAPS
-!$acc loop worker(THREAD_X)
+!$acc loop vector(32)
 #elif CRAY
 !$acc loop independent vector(THREAD_X) 
 #endif
