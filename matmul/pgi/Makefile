@@ -7,7 +7,7 @@ matmul_pgi : matmul_pgi.f90
 	$(PGI_FORT) $(PGI_OPTIONS) $< -o $@
 else
 matmul_pgi : matmul_pgi.F90
-	$(PGI_FORT) $(PGI_OPTIONS) $(M_PGI_DEFINE)$< -o $@
+	$(PGI_FORT) $(PGI_OPTIONS) $(M_PGI_DEFINE) $< -o $@
 endif
 
 clean:
